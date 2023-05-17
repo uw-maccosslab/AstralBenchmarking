@@ -264,7 +264,7 @@ plotLOQMMCC <- function(QuantReports) {
     geom_text(data = peptideSummary_summary,
               aes(x = 60, label = paste0(n,
                                          " quantifiable peptides \n Median LLOQ = ", round(medLOQ, 0), "%")),
-              y = Inf, vjust = 2, size = 5)+
+              y = Inf, vjust = 2)+
     theme(strip.text = element_text(
       size = 8))
 
@@ -285,7 +285,9 @@ plotLOQMMCCSummary <- function(QuantReports) {
     mutate(Quant = if_else(LOQ < 2, "50x dynamic range", Quant)) %>%
     mutate(Quant = factor(Quant, levels = c("Detectable", "Quantitative",
                                             "10x dynamic range",
-                                            "50x dynamic range")))
+                                            "50x dynamic range"))) %>%
+    drop_na(LOQ) %>%
+    drop_na(Transitions)
 
   peptideSummary2 <- peptideSummary %>%
     group_by(Transitions, MSMethod, Quant, Analyzer) %>%
@@ -309,7 +311,7 @@ plotLOQMMCCSummary <- function(QuantReports) {
     theme(strip.text = element_text(
       size = 9), legend.text=element_text(size=8)) +
     theme(legend.position = "right", axis.title.x = element_blank(),
-          axis.text.x = element_text(size = 8))
+          axis.text.x = element_text(vjust = 1, hjust=1, size = 8, angle = 45))
 
 
 }
@@ -364,7 +366,7 @@ plotLOQMMCCHistogram <- function(QuantReports,
           legend.text=element_text(size=8), legend.title = element_text(size=9),
           axis.title.x = element_text(size = 8))+
     guides(fill = guide_legend(title.position = "top", title.hjust = 0.5)) +
-    geom_text(y = Inf, vjust = 2, x = 1.2, size = 3,
+    geom_text(y = Inf, vjust = 2, x = 1.2,
               aes(label = paste0("Shared peptides = ", nrow(pairwise),
                                  "\n Median Ratio = ", round(median(pairwise$RAT), 2))))
 
@@ -394,12 +396,14 @@ upsetPlot <- function(QuantReports, Grouplevel) {
               values=c("Astral, 4 Th, 10 ms, DIA" = cOrange1,
                        "Astral, 2 Th, 3.5 ms, DIA" = cRed,
                        "Astral, 2 Th, 10 ms, dDIA" = cYellow,
-                       "Orbitrap, 8 Th, 23 ms, DIA" = cTeal), guide = "none"
+                       "Orbitrap, 8 Th, 22 ms, DIA" = cTeal,
+                       "Orbitrap, 2 Th, 23 ms, DIA" = cGreen2), guide = "none"
             )
           ), queries = list(upset_query(set = "Astral, 4 Th, 10 ms, DIA", fill = cOrange1),
                             upset_query(set = "Astral, 2 Th, 3.5 ms, DIA", fill = cRed),
                             upset_query(set = "Astral, 2 Th, 10 ms, dDIA", fill = cYellow),
-                            upset_query(set = "Orbitrap, 8 Th, 23 ms, DIA", fill = cTeal)),
+                            upset_query(set = "Orbitrap, 8 Th, 22 ms, DIA", fill = cTeal),
+                            upset_query(set = "Orbitrap, 2 Th, 23 ms, DIA", fill = cGreen2)),
           set_sizes=(
             upset_set_size()
             + scale_y_continuous(breaks = c(7000, 0))))
@@ -426,12 +430,14 @@ upsetPlot <- function(QuantReports, Grouplevel) {
               values=c("Astral, 4 Th, 10 ms, DIA" = cOrange1,
                        "Astral, 2 Th, 3.5 ms, DIA" = cRed,
                        "Astral, 2 Th, 10 ms, dDIA" = cYellow,
-                       "Orbitrap, 8 Th, 23 ms, DIA" = cTeal), guide = "none"
+                       "Orbitrap, 8 Th, 22 ms, DIA" = cTeal,
+                       "Orbitrap, 2 Th, 23 ms, DIA" = cGreen2), guide = "none"
             )
           ), queries = list(upset_query(set = "Astral, 4 Th, 10 ms, DIA", fill = cOrange1),
                             upset_query(set = "Astral, 2 Th, 3.5 ms, DIA", fill = cRed),
                             upset_query(set = "Astral, 2 Th, 10 ms, dDIA", fill = cYellow),
-                            upset_query(set = "Orbitrap, 8 Th, 23 ms, DIA", fill = cTeal)),
+                            upset_query(set = "Orbitrap, 8 Th, 22 ms, DIA", fill = cTeal),
+                            upset_query(set = "Orbitrap, 2 Th, 23 ms, DIA", fill = cGreen2)),
           set_sizes=(
             upset_set_size()
             + scale_y_continuous(breaks = c(70000, 0)))
@@ -485,7 +491,7 @@ quantRatioDensity <- function(QuantReports, Concentration1, Concentration2, Alph
     scale_y_continuous(expand = c(0, 0)) +
     theme_minimal() +
     facet_grid(MSMethod~Group, labeller = labeller(Group = labs)) +
-    theme(legend.position = c(0.8, 0.5), panel.grid.minor = element_blank(),
+    theme(legend.position = c(0.9, 0.5), panel.grid.minor = element_blank(),
           strip.text = element_text(size = 9, color = "white"),
           legend.title.align=0.5, legend.background = element_rect(fill = "white", color = "black",
                                                                    linetype = "solid")) +
@@ -510,7 +516,7 @@ quantRatioDensity <- function(QuantReports, Concentration1, Concentration2, Alph
     scale_color_manual(values = c(cRed, cOrange1, cYellow, cTeal)) +
     coord_cartesian(ylim = c(log10(Concentration2/Concentration1/multiplier),
                              log10(Concentration2/Concentration1* multiplier)),
-                    xlim = c(0,6)) +
+                    xlim = c(0,2.1)) +
     xlab("Density") +
     scale_x_continuous(breaks = seq(0, 10, 2))
 
@@ -597,45 +603,6 @@ quantRatioDensityProtein <- function(QuantReports, Concentration1, Concentration
 
 }
 
-
-plotLOQMMCCSummary2 <- function(QuantReports) {
-
-  peptideSummary <- QuantReports %>%
-    group_by(MSMethod, Peptide, Transitions,
-             type, InjectionTime, IsolationWindow, Analyzer) %>%
-    summarise( LOQ = mean(as.numeric(LOQ)))%>%
-    ungroup() %>%
-    arrange(Analyzer, desc(type), InjectionTime) %>%
-    mutate(MSMethod = factor(MSMethod, unique(MSMethod))) %>%
-    mutate(Quant = if_else(LOQ < 100, "Quantitative", "Detectable"))%>%
-    mutate(Quant = if_else(LOQ < 10, "10x dynamic range", Quant))%>%
-    mutate(Quant = if_else(LOQ < 2, "50x dynamic range", Quant)) %>%
-    mutate(Quant = factor(Quant, levels = c("Detectable", "Quantitative",
-                                            "10x dynamic range",
-                                            "50x dynamic range"))) %>%
-    group_by(Quant, MSMethod, Transitions) %>%
-    summarize(Count = n())
-
-
-
-
-  ggplot(peptideSummary,
-         aes(x = MSMethod, alpha = Quant, y = Count)) +
-    geom_bar(color = "white", fill = "white", alpha = 1, position = "fill", stat = "identity") +
-    geom_bar(position = "fill", stat = "identity", fill = cBlue, color = "black") +
-    scale_alpha_manual(values = c(0.25, 0.5, 0.75, 1),
-                       name = "") +
-    facet_wrap(~Transitions, nrow = 2) +
-    theme_minimal() +
-    ylab("Fraction of Detectable Peptides")+
-    theme(strip.text = element_text(
-      size = 9), legend.text=element_text(size=8)) +
-    theme(legend.position = "right", axis.title.x = element_blank(),
-          axis.text.x = element_text(size = 8)) +
-    scale_y_continuous(labels = scales::percent_format())
-
-
-}
 
 
 ### Processing plasma data
@@ -994,6 +961,7 @@ enrichmentAnalysis <- function(FCCalc, dbs, Direction) {
 
 }
 
+
 plotRankOrder2 <- function(FCCalc, labels) {
 
 
@@ -1196,7 +1164,7 @@ plotMassError <- function(massErrorFile, ionStatsFiles){
 
 
   ionStatsMassError <- read.csv(ionStatsFiles) %>%
-    select(Ã¯..scanNumber, InjectTime) %>%
+    select(Ã..scanNumber, InjectTime) %>%
     set_colnames(c("Raw.Spectrum.Ids", "InjectTime"))
 
 
@@ -1302,7 +1270,7 @@ plotDIAScheme <- function(Width1, Time1, Min1, Max1, Label1 ,
                                  levels =c(Label4, Label3, Label2, Label1)))
 
   ggplot(windowInfo, aes(xmin = xmin, ymin = ymin, xmax = xmax, ymax = ymax,
-                         fill = WindowScheme, alpha = WindowScheme, linetype = WindowScheme)) +
+                         fill = WindowScheme)) +
     geom_rect(color = "black") +
     theme_minimal()  +
     scale_fill_manual(values = c( cTeal, cYellow, cOrange1, cRed),
@@ -1317,9 +1285,8 @@ plotDIAScheme <- function(Width1, Time1, Min1, Max1, Label1 ,
           legend.key.width = unit(0.35, 'cm')) +
     ylab("m/z") +
     xlab("Time") +
-    coord_cartesian(ylim = c(Min1, Max1)) +
-    guides(alpha = guide_legend(show = FALSE),
-           linetype = guide_legend(show = FALSE))
+    coord_cartesian(ylim = c(Min1, Max1))+
+    guides(fill=guide_legend(nrow=2, byrow=TRUE)) 
 
 
 }
