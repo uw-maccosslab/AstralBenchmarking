@@ -256,7 +256,7 @@ plotLOQMMCC <- function(QuantReports) {
     scale_fill_manual(values = c(cRed, cOrange1, cYellow, cTeal)) +
     theme_minimal() +
     theme(legend.position = "none", panel.grid.minor = element_blank(),
-          legend.text=element_text(size=6), legend.title = element_text(size=8))+
+          legend.text=element_text(size=2), legend.title = element_text(size=8))+
     xlab("LLOQ (%)")+
     ylab("Peptides") +
     geom_vline(data = peptideSummary_summary,
@@ -264,7 +264,7 @@ plotLOQMMCC <- function(QuantReports) {
     geom_text(data = peptideSummary_summary,
               aes(x = 60, label = paste0(n,
                                          " quantifiable peptides \n Median LLOQ = ", round(medLOQ, 0), "%")),
-              y = Inf, vjust = 2)+
+              y = Inf, vjust = 2, size = 3)+
     theme(strip.text = element_text(
       size = 8))
 
@@ -366,7 +366,7 @@ plotLOQMMCCHistogram <- function(QuantReports,
           legend.text=element_text(size=8), legend.title = element_text(size=9),
           axis.title.x = element_text(size = 8))+
     guides(fill = guide_legend(title.position = "top", title.hjust = 0.5)) +
-    geom_text(y = Inf, vjust = 2, x = 1.2,
+    geom_text(y = Inf, vjust = 1, x = 1.3, 
               aes(label = paste0("Shared peptides = ", nrow(pairwise),
                                  "\n Median Ratio = ", round(median(pairwise$RAT), 2))))
 
@@ -491,7 +491,7 @@ quantRatioDensity <- function(QuantReports, Concentration1, Concentration2, Alph
     scale_y_continuous(expand = c(0, 0)) +
     theme_minimal() +
     facet_grid(MSMethod~Group, labeller = labeller(Group = labs)) +
-    theme(legend.position = c(0.9, 0.5), panel.grid.minor = element_blank(),
+    theme(legend.position = c(0.9, 0.75), panel.grid.minor = element_blank(),
           strip.text = element_text(size = 9, color = "white"),
           legend.title.align=0.5, legend.background = element_rect(fill = "white", color = "black",
                                                                    linetype = "solid")) +
@@ -1187,7 +1187,7 @@ plotMassError <- function(massErrorFile, ionStatsFiles){
 
 plotIonCountDist <- function(peakInfoFile) {
 
-  scanIonStats <- read.csv(peakInfoFile, threshold = 5) %>%
+  scanIonStats <- read.csv(peakInfoFile) %>%
     select(1:3) %>%
     set_colnames(c("Signal", "Scan", "InjectionTime")) %>%
     mutate(ions = Signal * InjectionTime/1000) %>%

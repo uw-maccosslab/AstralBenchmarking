@@ -16,6 +16,7 @@ MMCC_AS_10msdDIAResults <- "data/20230517_OLEP08_MMCC_1ug_MB_24min_AS_dDIA_10ms_
 MMCC_OT_90minResults <- "data/20230517_Lumos_MMCC_1ug_90min_OT_22ms_8Th_Ev3_GPFLib"
 
 
+
 #Plasma_30min_3p5msResults <- "data/20230403_OLEP08_EV_TP_1ug_MB_30min_AS_3p5ms_2Th_GPFLib"
 
 #Plasma_30min_10msResults <- "data/20230403_OLEP08_EV_TP_1ug_MB_30min_AS_10ms_4Th_GPFLib"
@@ -27,7 +28,6 @@ MMCC_OT_90minResults <- "data/20230517_Lumos_MMCC_1ug_90min_OT_22ms_8Th_Ev3_GPFL
 #Plasma_60min_15ms_dDIAResults <- "data/20230404_OLEP08_EV_TP_1ug_MB_60min_AS_dDIA_15ms_2Th_GPFLib"
 
 
-#MMCC_OT_24minResults <- "../data/20230517_Lumos_MMCC_1ug_90min_OT_22ms_8Th_Ev3_GPFLib"
 
 
 
