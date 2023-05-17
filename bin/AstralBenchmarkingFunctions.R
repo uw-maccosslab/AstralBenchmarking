@@ -317,6 +317,48 @@ plotLOQMMCCSummary <- function(QuantReports) {
 }
 
 
+writeLOQMMCCSummary <- function(QuantReports) {
+  
+  peptideSummary <- QuantReports %>%
+    group_by(MSMethod, Peptide, Transitions,
+             type, InjectionTime, IsolationWindow, Analyzer) %>%
+    summarise( LOQ = mean(as.numeric(LOQ)))%>%
+    ungroup() %>%
+    arrange(Analyzer, desc(type), InjectionTime) %>%
+    mutate(MSMethod = factor(MSMethod, unique(MSMethod))) %>%
+    mutate(Quant = if_else(LOQ < 100, "Quantitative", "Detectable"))%>%
+    mutate(Quant = if_else(LOQ < 10, "10x dynamic range", Quant))%>%
+    mutate(Quant = if_else(LOQ < 2, "50x dynamic range", Quant)) %>%
+    mutate(Quant = factor(Quant, levels = c("Detectable", "Quantitative",
+                                            "10x dynamic range",
+                                            "50x dynamic range"))) %>%
+    drop_na(LOQ) %>%
+    drop_na(Transitions) %>%
+    group_by(MSMethod, Transitions, Quant) %>%
+    summarize(Peptides = n())  %>%
+    mutate(PeptidesTotal = if_else(Quant == "Detectable", 
+                               Peptides + lead(Peptides,3) +
+                                 lead(Peptides,2) +
+                                 lead(Peptides,1), Peptides))%>%
+    mutate(PeptidesTotal = if_else(Quant == "Quantitative", 
+                               Peptides + 
+                                 lead(Peptides,2) +
+                                 lead(Peptides,1), PeptidesTotal))%>%
+    mutate(PeptidesTotal = if_else(Quant == "10x dynamic range", 
+                               Peptides + 
+                                 lead(Peptides,1), PeptidesTotal)) %>%
+    ungroup() %>%
+    select(-Peptides) %>%
+    pivot_wider(names_from = Quant, values_from = PeptidesTotal)
+  
+  
+  return(peptideSummary)
+  
+  
+}
+
+
+
 plotLOQMMCCHistogram <- function(QuantReports,
                                  Fileroot1, Label1,
                                  Fileroot2, Label2) {
@@ -766,6 +808,7 @@ summarizeSearch <- function(QuantReports, Level) {
 }
 
 
+
 summarizeSearch2 <- function(QuantReports, Level) {
 
   resultsSummary <- QuantReports %>%
@@ -1164,7 +1207,7 @@ plotMassError <- function(massErrorFile, ionStatsFiles){
 
 
   ionStatsMassError <- read.csv(ionStatsFiles) %>%
-    select(Ã..scanNumber, InjectTime) %>%
+    select(ï..scanNumber, InjectTime) %>%
     set_colnames(c("Raw.Spectrum.Ids", "InjectTime"))
 
 
@@ -1185,7 +1228,7 @@ plotMassError <- function(massErrorFile, ionStatsFiles){
 }
 
 
-plotIonCountDist <- function(peakInfoFile) {
+plotIonCountDist <- function(peakInfoFile, threshold = 5) {
 
   scanIonStats <- read.csv(peakInfoFile) %>%
     select(1:3) %>%
@@ -1193,17 +1236,6 @@ plotIonCountDist <- function(peakInfoFile) {
     mutate(ions = Signal * InjectionTime/1000) %>%
     mutate(InjectionTimeGroup = as.factor(round(InjectionTime/2, 0)*2))
 
-
-  scanIonStatsSummary <- scanIonStats %>%
-    group_by(InjectionTimeGroup) %>%
-    summarize(meanIons = mean(ions), medIons = median(ions),
-              meanCurrent = mean(Signal), medCurrent = median(Signal)) %>%
-    cbind(peakIons = c(10^(density(log10(filter(scanIonStats, InjectionTimeGroup == 0)$ions))$x[which.max(density(log10(filter(scanIonStats, InjectionTimeGroup == 0)$ions))$y)]),
-                       10^(density(log10(filter(scanIonStats, InjectionTimeGroup == 2)$ions))$x[which.max(density(log10(filter(scanIonStats, InjectionTimeGroup == 2)$ions))$y)]),
-                       10^(density(log10(filter(scanIonStats, InjectionTimeGroup == 4)$ions))$x[which.max(density(log10(filter(scanIonStats, InjectionTimeGroup == 4)$ions))$y)]),
-                       10^(density(log10(filter(scanIonStats, InjectionTimeGroup == 6)$ions))$x[which.max(density(log10(filter(scanIonStats, InjectionTimeGroup == 6)$ions))$y)]),
-                       10^(density(log10(filter(scanIonStats, InjectionTimeGroup == 8)$ions))$x[which.max(density(log10(filter(scanIonStats, InjectionTimeGroup == 8)$ions))$y)]),
-                       10^(density(log10(filter(scanIonStats, InjectionTimeGroup == 10)$ions))$x[which.max(density(log10(filter(scanIonStats, InjectionTimeGroup == 10)$ions))$y)])))
 
   fractionPeaks <- nrow(filter(scanIonStats, ions <= threshold))/nrow(scanIonStats)
 
@@ -1221,9 +1253,7 @@ plotIonCountDist <- function(peakInfoFile) {
                        labels = c("0-2", "2-4", "4-6", "6-8", "8-10", "10"),
                        name = "Injection time bin (ms)") +
     ylab("Density") +
-    xlab("Number of ions") +
-    geom_vline(data = scanIonStatsSummary, (aes(xintercept = peakIons, color = InjectionTimeGroup)),
-               linetype = "dashed", size = 1)
+    xlab("Number of ions") 
 
 
 }

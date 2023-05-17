@@ -18,15 +18,15 @@ MMCC_OT_24minResults <- "data/20230517_OLEP08_MMCC_1ug_MB_24min_OT_23ms_2Th_Ev3_
 
 
 
-#Plasma_30min_3p5msResults <- "data/20230403_OLEP08_EV_TP_1ug_MB_30min_AS_3p5ms_2Th_GPFLib"
+Plasma_30min_3p5msResults <- "data/20230517_OLEP08_EV_TP_1ug_MB_30min_AS_3p5ms_2Th_GPFLib"
 
-#Plasma_30min_10msResults <- "data/20230403_OLEP08_EV_TP_1ug_MB_30min_AS_10ms_4Th_GPFLib"
+Plasma_30min_10msResults <- "data/20230517_OLEP08_EV_TP_1ug_MB_30min_AS_10ms_4Th_GPFLib"
 
-#Plasma_30min_10ms_dDIAResults <- "data/20230405_OLEP08_EV_TP_1ug_MB_30min_AS_dDIA_20ms_4Th_GPFLib"
+Plasma_30min_10ms_dDIAResults <- "data/20230517_OLEP08_EV_TP_1ug_MB_30min_AS_dDIA_20ms_4Th_GPFLib"
 
-#Plasma_60min_15msResults <- "data/20230404_OLEP08_EV_TP_1ug_MB_60min_AS_15ms_4Th_GPFLib"
+#Plasma_60min_15msResults <- "data/20230517_OLEP08_EV_TP_1ug_MB_60min_AS_15ms_4Th_GPFLib"
 
-#Plasma_60min_15ms_dDIAResults <- "data/20230404_OLEP08_EV_TP_1ug_MB_60min_AS_dDIA_15ms_2Th_GPFLib"
+#Plasma_60min_15ms_dDIAResults <- "data/20230517_OLEP08_EV_TP_1ug_MB_60min_AS_dDIA_15ms_2Th_GPFLib"
 
 
 QuantReports_All <- readQuantReports(Plasma_30min_3p5msResults, Plasma_30min_10msResults, Plasma_30min_10ms_dDIAResults,
@@ -262,14 +262,14 @@ DepletedList <- c("ALBU" ,"TRFE",
 
 
 
-quantMMCC_Shortmassrange <- quantMMCC_Shortmassrange %>%
+quantMMCC_Shortmassrange2 <- quantMMCC_Shortmassrange %>%
   filter(SampleLabel == "100%" | SampleLabel == "50%" | SampleLabel == "10%") %>%
   mutate(SampleLabel = paste0(10*Analyte.Concentration, " ng"))
 
-proteinCVShort <- plotCVsMMCCProteins(quantMMCC_Shortmassrange, "All transitions")
+proteinCVShort <- plotCVsMMCCProteins(quantMMCC_Shortmassrange2, "All transitions")
 
 peptideCVShort <-
-  plotCVsMMCCAll(quantMMCC_Shortmassrange, "All transitions")
+  plotCVsMMCCAll(quantMMCC_Shortmassrange2, "All transitions")
 
 ggarrange(peptideCVShort, proteinCVShort, nrow = 1, labels = c("A", "B"))
 
@@ -277,133 +277,28 @@ ggsave("results/AstralBenchmarking_FigureSL.jpg", height = 7, width = 14, dpi = 
 
 
 
-plotIonCountDist("data/20230406_OLEP08_MMCC_1ug_MB_24min_AS_10ms_4Th_I_2_PeakInfo_1to10.csv")
+plotIonCountDist("data/20230406_OLEP08_MMCC_1ug_MB_24min_AS_10ms_4Th_I_3_PeakInfo_120000to130000.csv")
 
 ggsave("results/AstralBenchmarking_FigureSM.jpg", height = 7, width = 14, dpi = 700)
 
 
 
 
-
-
-
-
-
 quantRatioDensity(quantMMCC_Shortmassrange, 100, 1, Alpha = 0.8, multiplier = 250)
 
-ggsave("SupplementalFigures/20230501_Ratio_shortMassRange_100to1.jpg", height = 9, width = 9, dpi = 700)
+ggsave("results/AstralBenchmarking_FigureSN.jpg", height = 9, width = 9, dpi = 700)
 
 
 
 
+plotMassError("data/20230403_OLEP08_EV_1ug_MB_30min_AS_10ms_4Th_1_MassErrorChromatograms.tsv", 
+              "data/20230403_OLEP08_EV_1ug_MB_30min_AS_10ms_4Th_1_Info_CS.csv")
 
 
+ggsave("results/AstralBenchmarking_FigureSO.jpg", height = 6, width = 8, dpi = 700)
 
 
-plotMassError(massErrorFile, ionStatsFiles)
+ResultsSummary <- writeLOQMMCCSummary(quantMMCC1)
 
-
-quantMMCC_Shortmassrange <- quantMMCC_Shortmassrange %>%
-  filter(SampleLabel == "100%" | SampleLabel == "50%" | SampleLabel == "10%") %>%
-  mutate(SampleLabel = paste0(10*Analyte.Concentration, " ng"))
-
-proteinCVShort <- plotCVsMMCCProteins(quantMMCC_Shortmassrange, "All transitions")
-
-peptideCVShort <-
-  plotCVsMMCCAll(quantMMCC_Shortmassrange, "All transitions")
-
-ggarrange(peptideCVShort, proteinCVShort, nrow = 1, labels = c("A", "B"))
-
-ggsave("SupplementalFigures/20230501_CVSummary_Short_v2.jpg", height = 7, width = 14, dpi = 700)
-
-
-
-
-#writeDiffactoInputMMCC("../MMCC/20230425_OLEP08_MMCC_1ug_MB_24min_AS_3p5ms_2Th_Ev1_GPFLib", quantMMCC1)
-
-#writeDiffactoInputMMCC("../MMCC/20230425_OLEP08_MMCC_1ug_MB_24min_AS_10ms_4Th_Ev1_GPFLib", quantMMCC1)
-
-#writeDiffactoInputMMCC("../MMCC/20230425_OLEP08_MMCC_1ug_MB_24min_OT_23ms_24Th_Ev2_GPFLib", quantMMCC1)
-
-#writeDiffactoInputMMCC("../MMCC/20230425_OLEP08_MMCC_1ug_MB_24min_AS_dDIA_10ms_2Th_Ev1_GPFLib", quantMMCC1)
-
-
-#plotDiffactoRatio(diffactoRatioReadIn("../MMCC/20230425_OLEP08_MMCC_1ug_MB_24min_AS_10ms_4Th_Ev1_GPFLib",
-#                                      "Astral, 4 Th, 10 ms, DIA"),
-#              diffactoRatioReadIn("../MMCC/20230425_OLEP08_MMCC_1ug_MB_24min_AS_3p5ms_2Th_Ev1_GPFLib",
-  #                                    "Astral, 2 Th, 3.5 ms, DIA"),
- #                 diffactoRatioReadIn("../MMCC/20230425_OLEP08_MMCC_1ug_MB_24min_AS_dDIA_10ms_2Th_Ev1_GPFLib",
- #                                     "Astral, 2 Th, 10 ms, dDIA"),
- #             diffactoRatioReadIn("../MMCC/20230425_OLEP08_MMCC_1ug_MB_24min_OT_23ms_24Th_Ev2_GPFLib",
-  #                                "Orbitrap, 24 Th, 23 ms, DIA"))
-
-
-
-
-
-LOQ_Histo_dDIA_3p5 <- plotLOQMMCCHistogram(quantMMCC1, "../MMCC/20230428_OLEP08_MMCC_1ug_MB_24min_AS_3p5ms_2Th_Ev1p12_GPFLib",
-                     "2 Th, 3.5 ms, DIA",
-                     "../MMCC/20230428_OLEP08_MMCC_1ug_MB_24min_AS_dDIA_10ms_2Th_Ev1p12_GPFLib",
-                     "2 Th, 10 ms, dDIA")
-
-
-
-
-
-LOQ_Histo_dDIA_10 <- plotLOQMMCCHistogram(quantMMCC1, "../MMCC/20230428_OLEP08_MMCC_1ug_MB_24min_AS_10ms_4Th_Ev1p12_GPFLib",
-                     "4 Th, 10 ms, DIA",
-                     "../MMCC/20230428_OLEP08_MMCC_1ug_MB_24min_AS_dDIA_10ms_2Th_Ev1p12_GPFLib",
-                     "2 Th, 10 ms, dDIA")
-ggarrange(LOQ_Histo_dDIA_3p5, LOQ_Histo_dDIA_10, nrow = 1, labels = c("A", "B"))
-
-ggsave("SupplementalFigures/HeLaLOQComp_dDIAvsDIA.jpg", height = 5, width = 9, dpi = 700)
-
-
-
-plotLOQRatioScatter(quantMMCC1, "../MMCC/20230428_OLEP08_MMCC_1ug_MB_24min_AS_3p5ms_2Th_Ev1p12_GPFLib",
-                     "2 Th, 3.5 ms, DIA",
-                     "../MMCC/20230428_OLEP08_MMCC_1ug_MB_24min_AS_dDIA_10ms_2Th_Ev1p12_GPFLib",
-                     "2 Th, 10 ms, dDIA") +
-  coord_cartesian(xlim = c(0, 5e5))
-
-
-plotRankOrder(calcFoldChange("../Plasma_60min/20230404_OLEP08_EV_TP_1ug_MB_60min_AS_dDIA_15ms_2Th_GPFLib",
-                             QuantReports_All, EnrichedList, DepletedList),
-              labels = TRUE)
-
-
-ggsave("SupplementalFigures/PlasmaRankOrderPlot_v1.jpg", height = 5, width = 9, dpi = 700)
-
-
-
-DepletedList2 <- c()
-
-EnrichedList2 <- c("CRP", "PLMN", "PCSK9" ,
-                  "PLF4",  "CXCL7", "CFAD",  "INHBC",
-                   "APOE" ,
-                  "APOA1",  "APOB", "IL18", "PARK7", "A4", "SYUA")
-
-plotRankOrder2(calcFoldChange("../Plasma_60min/20230404_OLEP08_EV_TP_1ug_MB_60min_AS_dDIA_15ms_2Th_GPFLib",
-                              QuantReports_All, EnrichedList2, DepletedList2),
-               labels = TRUE)
-
-ggsave("SupplementalFigures/PlasmaRankOrderPlot_v2.jpg", height = 4.5, width = 8, dpi = 700)
-
-plotRankOrder2(calcFoldChange("../Plasma_60min/20230404_OLEP08_EV_TP_1ug_MB_60min_AS_15ms_4Th_GPFLib",
-                              QuantReports_All, EnrichedList2, DepletedList2),
-               labels = TRUE)
-
-ggsave("SupplementalFigures/PlasmaRankOrderPlot_v3.jpg", height = 5, width = 8, dpi = 700)
-
-
-
-
-
-
-
-
-
-
- plotCVs(QuantReports_All)
-
- ggsave("SupplementalFigures/20230504_PlasmaCV.jpg", height = 7, width = 9, dpi = 700)
+write.table(writeLOQMMCCSummary(quantMMCC1), "results/SupplementalTable2.tsv",
+            row.names = FALSE, quote = FALSE, sep = "\t")
