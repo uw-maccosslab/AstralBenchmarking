@@ -24,9 +24,9 @@ Plasma_30min_10msResults <- "data/20230517_OLEP08_EV_TP_1ug_MB_30min_AS_10ms_4Th
 
 Plasma_30min_10ms_dDIAResults <- "data/20230517_OLEP08_EV_TP_1ug_MB_30min_AS_dDIA_20ms_4Th_GPFLib"
 
-#Plasma_60min_15msResults <- "data/20230517_OLEP08_EV_TP_1ug_MB_60min_AS_15ms_4Th_GPFLib"
+Plasma_60min_15msResults <- "data/20230517_OLEP08_EV_TP_1ug_MB_60min_AS_15ms_4Th_GPFLib"
 
-#Plasma_60min_15ms_dDIAResults <- "data/20230517_OLEP08_EV_TP_1ug_MB_60min_AS_dDIA_15ms_2Th_GPFLib"
+Plasma_60min_15ms_dDIAResults <- "data/20230517_OLEP08_EV_TP_1ug_MB_60min_AS_dDIA_15ms_2Th_GPFLib"
 
 
 QuantReports_All <- readQuantReports(Plasma_30min_3p5msResults, Plasma_30min_10msResults, Plasma_30min_10ms_dDIAResults,
@@ -246,18 +246,23 @@ EnrichedList <- c("CD9", "CD63", "FLOT1" ,
 DepletedList <- c("ALBU" ,"TRFE",
                   "APOA1",  "APOB",  "HBA")
 
-#plotRankOrder(calcFoldChange(Plasma_60min_15msResults,
- #                            QuantReports_All, EnrichedList, DepletedList),
-  #            labels = TRUE)
+plotRankOrder(calcFoldChange(Plasma_60min_15msResults,
+                             QuantReports_All, EnrichedList, DepletedList),
+              labels = TRUE)
 
 
-#ggsave("results/AstralBenchmarking_FigureSI.jpg", height = 5, width = 9, dpi = 700)
+ggsave("results/AstralBenchmarking_FigureSI.jpg", height = 5, width = 9, dpi = 700)
 
 
 
-#plotCVs(QuantReports_All)
+plasmaCV_All <- plotCVs(QuantReports_All, Transitions = "All")
 
-#ggsave("results/AstralBenchmarking_FigureSK.jpg", height = 7, width = 9, dpi = 700)
+plasmaCV_Refined <- plotCVs(QuantReports_All, Transitions = "Refined")
+
+ggarrange(plasmaCV_All, plasmaCV_Refined, labels = c("A", "B"),
+          nrow = 2)
+
+ggsave("results/AstralBenchmarking_FigureSK.jpg", height = 9, width = 9, dpi = 700)
 
 
 
@@ -302,3 +307,13 @@ ResultsSummary <- writeLOQMMCCSummary(quantMMCC1)
 
 write.table(writeLOQMMCCSummary(quantMMCC1), "results/SupplementalTable2.tsv",
             row.names = FALSE, quote = FALSE, sep = "\t")
+
+
+
+plotLOQMMCCSummary(quantMMCC1,
+                   OTmultiplier = 90,
+                   ASmultiplier = 24,
+                   AxisLabel = "Peptides per minute")
+
+ggsave("results/AstralBenchmarking_FigureSP.jpg", height = 6, width = 8, dpi = 700)
+

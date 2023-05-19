@@ -23,9 +23,9 @@ Plasma_30min_10msResults <- "data/20230517_OLEP08_EV_TP_1ug_MB_30min_AS_10ms_4Th
 
 Plasma_30min_10ms_dDIAResults <- "data/20230517_OLEP08_EV_TP_1ug_MB_30min_AS_dDIA_20ms_4Th_GPFLib"
 
-#Plasma_60min_15msResults <- "data/20230517_OLEP08_EV_TP_1ug_MB_60min_AS_15ms_4Th_GPFLib"
+Plasma_60min_15msResults <- "data/20230517_OLEP08_EV_TP_1ug_MB_60min_AS_15ms_4Th_GPFLib"
 
-#Plasma_60min_15ms_dDIAResults <- "data/20230517_OLEP08_EV_TP_1ug_MB_60min_AS_dDIA_15ms_2Th_GPFLib"
+Plasma_60min_15ms_dDIAResults <- "data/20230517_OLEP08_EV_TP_1ug_MB_60min_AS_dDIA_15ms_2Th_GPFLib"
 
 
 
@@ -48,7 +48,7 @@ DIAbounds <- plotdDIABounds("data/RT_DIA_Scheduling_HeLa.csv",
 proteinUpset <- upsetPlot(quantMMCCSelected, "Protein")
 
 
-exampleScheme <- plotDIAScheme(2, 5, 600, 648, "200 Hz, 2 Th",
+exampleScheme <- plotDIAScheme(2, 5, 600, 648, "182 Hz, 2 Th",
                                4, 11.5, 600, 648, "87 Hz, 4 Th",
                                2, 11.5, 612, 632, "87 Hz, 2 Th",
                                8, 37, 600, 648, "27 Hz, 8 Th")
@@ -121,7 +121,7 @@ QuantReports_All <- readQuantReports(Plasma_30min_3p5msResults, Plasma_30min_10m
 
 
 
-plotCV <- plotCVs(filter(QuantReports_All, Search == "GPFLib unrefined"))+
+plotCV <- plotCVs((QuantReports_All), Transitions = "Refined")+
   theme(axis.text.x = element_text(size = 8),
         plot.margin = unit(c(0,1,0,1), 'lines'))
 

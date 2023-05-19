@@ -100,7 +100,10 @@ readQuantReportsMMCC <- function(fileRoot1, ...) {
     quant_full <- bind_rows(quant_full, quant_unrefined, quant_refined)
   }
 
-
+  quant_full <- quant_full %>%
+    drop_na(LOQ) %>%
+    drop_na(Transitions)
+  
   return(quant_full)
 }
 
@@ -271,8 +274,13 @@ plotLOQMMCC <- function(QuantReports) {
 }
 
 
-plotLOQMMCCSummary <- function(QuantReports) {
 
+
+plotLOQMMCCSummary <- function(QuantReports,
+                               OTmultiplier = 1,
+                               ASmultiplier = 1,
+                               AxisLabel = "Peptides") {
+  
   peptideSummary <- QuantReports %>%
     group_by(MSMethod, Peptide, Transitions,
              type, InjectionTime, IsolationWindow, Analyzer) %>%
@@ -285,35 +293,29 @@ plotLOQMMCCSummary <- function(QuantReports) {
     mutate(Quant = if_else(LOQ < 2, "50x dynamic range", Quant)) %>%
     mutate(Quant = factor(Quant, levels = c("Detectable", "Quantitative",
                                             "10x dynamic range",
-                                            "50x dynamic range"))) %>%
-    drop_na(LOQ) %>%
-    drop_na(Transitions)
-
-  peptideSummary2 <- peptideSummary %>%
-    group_by(Transitions, MSMethod, Quant, Analyzer) %>%
-    summarize(n = n()) %>%
+                                            "50x dynamic range")))%>%
+    group_by(Quant, MSMethod, Transitions, Analyzer) %>%
+    summarize(Count = n()) %>%
     ungroup() %>%
-    arrange(desc(n)) %>%
-    group_by(Transitions, Quant, Analyzer) %>%
-    slice(1)
-
-
-
-  ggplot(peptideSummary,
-         aes(x = MSMethod, alpha = Quant)) +
-    geom_bar(color = "white", fill = "white", alpha = 1) +
-    geom_bar(color = "black", fill = cBlue) +
+    mutate(Count = if_else(Analyzer == "Orbitrap", Count/OTmultiplier,
+                           Count/ASmultiplier))
+  
+  
+  ggplot(peptideSummary, 
+         aes(alpha = Quant, y = Count, x = MSMethod)) +
+    geom_col(color = "white", fill = "white", alpha = 1) +
+    geom_col(fill = cBlue, color = "black") +
     scale_alpha_manual(values = c(0.25, 0.5, 0.75, 1),
                        name = "") +
     facet_wrap(~Transitions, nrow = 2) +
     theme_minimal() +
-    ylab("Peptides")+
+    ylab(AxisLabel)+
     theme(strip.text = element_text(
       size = 9), legend.text=element_text(size=8)) +
     theme(legend.position = "right", axis.title.x = element_blank(),
           axis.text.x = element_text(vjust = 1, hjust=1, size = 8, angle = 45))
-
-
+  
+  
 }
 
 
