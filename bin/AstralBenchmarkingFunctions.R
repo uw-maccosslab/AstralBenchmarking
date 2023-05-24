@@ -277,8 +277,8 @@ plotLOQMMCC <- function(QuantReports) {
 
 
 plotLOQMMCCSummary <- function(QuantReports,
-                               OTmultiplier = 1,
-                               ASmultiplier = 1,
+                               OTmultiplier = 60,
+                               ASmultiplier = 60,
                                AxisLabel = "Peptides") {
   
   peptideSummary <- QuantReports %>%
@@ -297,8 +297,8 @@ plotLOQMMCCSummary <- function(QuantReports,
     group_by(Quant, MSMethod, Transitions, Analyzer) %>%
     summarize(Count = n()) %>%
     ungroup() %>%
-    mutate(Count = if_else(Analyzer == "Orbitrap", Count/OTmultiplier,
-                           Count/ASmultiplier))
+    mutate(Count = if_else(Analyzer == "Orbitrap", Count/(OTmultiplier/60),
+                           Count/(ASmultiplier/60)))
   
   
   ggplot(peptideSummary, 
@@ -648,6 +648,47 @@ quantRatioDensityProtein <- function(QuantReports, Concentration1, Concentration
 }
 
 
+plotLOQMMCCSummaryGraphicalAbstract <- function(QuantReports,
+                               OTmultiplier = 60,
+                               ASmultiplier = 60,
+                               AxisLabel = "Peptides") {
+  
+  peptideSummary <- QuantReports %>%
+    group_by(MSMethod, Peptide, Transitions,
+             type, InjectionTime, IsolationWindow, Analyzer) %>%
+    filter(Transitions == "LOQ optimized transitions") %>%
+    summarise( LOQ = mean(as.numeric(LOQ)))%>%
+    ungroup() %>%
+    arrange(Analyzer, desc(type), InjectionTime) %>%
+    mutate(MSMethod = factor(MSMethod, unique(MSMethod))) %>%
+    mutate(Quant = if_else(LOQ < 100, "Quantitative", "Detectable"))%>%
+    mutate(Quant = if_else(LOQ < 10, "10x dynamic range", Quant))%>%
+    mutate(Quant = if_else(LOQ < 2, "50x dynamic range", Quant)) %>%
+    mutate(Quant = factor(Quant, levels = c("Detectable", "Quantitative",
+                                            "10x dynamic range",
+                                            "50x dynamic range")))%>%
+    filter(Quant != "Detectable") %>%
+    group_by(MSMethod, Transitions, Analyzer) %>%
+    summarize(Count = n()) %>%
+    ungroup() %>%
+    mutate(Count = if_else(Analyzer == "Orbitrap", Count/(OTmultiplier/60),
+                           Count/(ASmultiplier/60))) %>%
+    group_by(Analyzer) %>%
+    summarize(Count = max(Count))
+  
+  
+  ggplot(peptideSummary, 
+         aes(y = Count, x = Analyzer, fill = Analyzer)) +
+    geom_col(color = "black") +
+    theme_minimal() +
+    ylab(AxisLabel)+
+    theme(axis.title.x = element_blank(),
+          axis.text.x = element_text(vjust = 1, hjust=1, size = 8, angle = 45)) +
+    theme(legend.position = "none") +
+    scale_fill_manual(values = c(cRed, cTeal))
+  
+  
+}
 
 ### Processing plasma data
 

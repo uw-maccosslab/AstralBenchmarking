@@ -48,7 +48,7 @@ DIAbounds <- plotdDIABounds("data/RT_DIA_Scheduling_HeLa.csv",
 proteinUpset <- upsetPlot(quantMMCCSelected, "Protein")
 
 
-exampleScheme <- plotDIAScheme(2, 5, 600, 648, "182 Hz, 2 Th",
+exampleScheme <- plotDIAScheme(2, 5, 600, 648, "187 Hz, 2 Th",
                                4, 11.5, 600, 648, "87 Hz, 4 Th",
                                2, 11.5, 612, 632, "87 Hz, 2 Th",
                                8, 37, 600, 648, "27 Hz, 8 Th")
@@ -145,3 +145,15 @@ ggarrange(pepSummary, protSummary, plotCV, volcano,
           ncol = 1, nrow = 4, heights = c(0.65, 0.65, 1.2, 1))
 
 ggsave("results/AstralBenchmarking_Figure4.jpg", height = 8, width = 6.66, dpi = 700)
+
+
+### Graphical abstract
+
+graphicAbstract <- plotLOQMMCCSummaryGraphicalAbstract(quantMMCC1,
+                                    OTmultiplier = 90,
+                                    ASmultiplier = 24,
+                                    AxisLabel = "Peptides per hour")
+
+ggarrange(graphicAbstract, blank, nrow = 1)
+
+ggsave("results/AstralBenchmarking_TOCGraphic.jpg", height = 1.75, width = 3.25, dpi = 700)
