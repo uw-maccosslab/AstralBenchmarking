@@ -74,7 +74,7 @@ ggarrange(chrLibIons, chrLibIT,
           chrLibCentroids, chrLibSpeed,
           labels = c("A", "B", "C", "D"))
 
-ggsave("results/AstralBenchmarking_FigureSA.jpg", height = 8, width = 9, dpi = 700)
+ggsave("results/AstralBenchmarking_FigureS1.jpg", height = 8, width = 9, dpi = 700)
 
 
 
@@ -149,7 +149,7 @@ ggarrange(quantIons, quantIT,
           quantCentroids, quantSpeed,
           labels = c("A", "B", "C", "D"))
 
-ggsave("results/AstralBenchmarking_FigureSB.jpg", height = 8, width = 9.5, dpi = 700)
+ggsave("results/AstralBenchmarking_FigureS2.jpg", height = 8, width = 9.5, dpi = 700)
 
 
 
@@ -165,7 +165,7 @@ peptideUpset <- upsetPlot(quantMMCCSelected, "Peptide")
 
 peptideUpset
 
-ggsave("results/AstralBenchmarking_FigureSC.jpg", height = 6, width = 9, dpi = 700)
+ggsave("results/AstralBenchmarking_FigureS3.jpg", height = 6, width = 9, dpi = 700)
 
 
 
@@ -179,13 +179,13 @@ peptideUpsetShort <- upsetPlot(quantMMCC_Shortmassrange, "Peptide")
 
 peptideUpsetShort
 
-ggsave("results/AstralBenchmarking_FigureSD.jpg", height = 6, width = 9, dpi = 700)
+ggsave("results/AstralBenchmarking_FigureS4.jpg", height = 6, width = 9, dpi = 700)
 
 
 
 quantRatioDensityProtein(quantMMCC1, 100, 10)
 
-ggsave("results/AstralBenchmarking_FigureSE.jpg", height = 9, width = 9, dpi = 700)
+ggsave("results/AstralBenchmarking_FigureS7.jpg", height = 9, width = 9, dpi = 700)
 
 
 
@@ -207,7 +207,12 @@ ggarrange(ggarrange(LOQsummary_short, pairwiseComp_short, nrow = 2,
           widths = c(0.8, 0.8, 0.7), labels = c("", "C", "D")
 )
 
-ggsave("results/AstralBenchmarking_FigureSF.jpg", height = 7, width = 14, dpi = 700)
+ggsave("results/AstralBenchmarking_FigureS8.jpg", height = 7, width = 14, dpi = 700)
+
+
+quantRatioDensity(quantMMCC1, 100, 1, Alpha = 0.1, multiplier = 250)
+
+ggsave("results/AstralBenchmarking_FigureS9.jpg", height = 9, width = 9, dpi = 700)
 
 
 LOQ_Histo_dDIA_3p5 <- plotLOQMMCCHistogram(quantMMCC1, MMCC_AS_10msdDIAResults, 
@@ -230,13 +235,11 @@ LOQ_Histo_dDIA_10 <- plotLOQMMCCHistogram(quantMMCC1, MMCC_AS_10msdDIAResults,
 
 ggarrange(LOQ_Histo_dDIA_3p5, LOQ_Histo_dDIA_10, nrow = 1, labels = c("A", "B"))
 
-ggsave("results/AstralBenchmarking_FigureSG.jpg", height = 5, width = 9, dpi = 700)
+ggsave("results/AstralBenchmarking_FigureS11.jpg", height = 5, width = 9, dpi = 700)
 
 
 
-quantRatioDensity(quantMMCC1, 100, 1, Alpha = 0.1, multiplier = 250)
 
-ggsave("results/AstralBenchmarking_FigureSH.jpg", height = 9, width = 9, dpi = 700)
 
 
 
@@ -251,7 +254,7 @@ plotRankOrder(calcFoldChange(Plasma_60min_15msResults,
               labels = TRUE)
 
 
-ggsave("results/AstralBenchmarking_FigureSI.jpg", height = 5, width = 9, dpi = 700)
+ggsave("results/AstralBenchmarking_FigureS15.jpg", height = 5, width = 9, dpi = 700)
 
 
 
@@ -278,20 +281,20 @@ peptideCVShort <-
 
 ggarrange(peptideCVShort, proteinCVShort, nrow = 1, labels = c("A", "B"))
 
-ggsave("results/AstralBenchmarking_FigureSL.jpg", height = 7, width = 14, dpi = 700)
+ggsave("results/AstralBenchmarking_FigureS5.jpg", height = 7, width = 14, dpi = 700)
 
 
 
 plotIonCountDist("data/20230406_OLEP08_MMCC_1ug_MB_24min_AS_10ms_4Th_I_3_PeakInfo_120000to130000.csv")
 
-ggsave("results/AstralBenchmarking_FigureSM.jpg", height = 7, width = 14, dpi = 700)
+ggsave("results/AstralBenchmarking_FigureS14.jpg", height = 7, width = 14, dpi = 700)
 
 
 
 
 quantRatioDensity(quantMMCC_Shortmassrange, 100, 1, Alpha = 0.8, multiplier = 250)
 
-ggsave("results/AstralBenchmarking_FigureSN.jpg", height = 9, width = 9, dpi = 700)
+ggsave("results/AstralBenchmarking_FigureS10.jpg", height = 9, width = 9, dpi = 700)
 
 
 
@@ -300,7 +303,7 @@ plotMassError("data/20230403_OLEP08_EV_1ug_MB_30min_AS_10ms_4Th_1_MassErrorChrom
               "data/20230403_OLEP08_EV_1ug_MB_30min_AS_10ms_4Th_1_Info_CS.csv")
 
 
-ggsave("results/AstralBenchmarking_FigureSO.jpg", height = 6, width = 8, dpi = 700)
+ggsave("results/AstralBenchmarking_FigureS12.jpg", height = 6, width = 8, dpi = 700)
 
 
 ResultsSummary <- writeLOQMMCCSummary(quantMMCC1)
@@ -308,12 +311,14 @@ ResultsSummary <- writeLOQMMCCSummary(quantMMCC1)
 write.table(writeLOQMMCCSummary(quantMMCC1), "results/SupplementalTable2.tsv",
             row.names = FALSE, quote = FALSE, sep = "\t")
 
+resultsShort <- writeLOQMMCCSummary(quantMMCC_Shortmassrange)
+
 
 
 plotLOQMMCCSummary(quantMMCC1,
                    OTmultiplier = 90,
                    ASmultiplier = 24,
-                   AxisLabel = "Peptides per minute")
+                   AxisLabel = "Peptides per hour")
 
-ggsave("results/AstralBenchmarking_FigureSP.jpg", height = 6, width = 8, dpi = 700)
+ggsave("results/AstralBenchmarking_FigureS6.jpg", height = 6, width = 8, dpi = 700)
 

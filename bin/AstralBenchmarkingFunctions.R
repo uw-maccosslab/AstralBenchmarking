@@ -678,14 +678,14 @@ plotLOQMMCCSummaryGraphicalAbstract <- function(QuantReports,
   
   
   ggplot(peptideSummary, 
-         aes(y = Count, x = Analyzer, fill = Analyzer)) +
+         aes(x = Count, y = Analyzer, fill = Analyzer)) +
     geom_col(color = "black") +
     theme_minimal() +
-    ylab(AxisLabel)+
-    theme(axis.title.x = element_blank(),
-          axis.text.x = element_text(vjust = 1, hjust=1, size = 8, angle = 45)) +
+    xlab(AxisLabel)+
+    theme(axis.title.y = element_blank()) +
     theme(legend.position = "none") +
-    scale_fill_manual(values = c(cRed, cTeal))
+    scale_fill_manual(values = c(cRed, cTeal)) +
+    scale_x_continuous(breaks = c(50000, 100000))
   
   
 }

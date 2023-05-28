@@ -140,11 +140,24 @@ volcano <- plotFoldChange(calcFoldChange(Plasma_60min_15msResults,
                labels = TRUE)
 
 
-ggarrange(pepSummary, protSummary, plotCV, volcano,
-          labels = c("A", "", "B", "C"),
-          ncol = 1, nrow = 4, heights = c(0.65, 0.65, 1.2, 1))
+DepletedList2 <- c("")
 
-ggsave("results/AstralBenchmarking_Figure4.jpg", height = 8, width = 6.66, dpi = 700)
+EnrichedList2 <- c("CRP", "PLMN", "PCSK9" ,
+                   "PLF4",  "CXCL7", "CFAD",  "INHBC",
+                   "APOE" ,
+                   "APOA1",  "APOB", "IL18", "PARK7", "A4", "SYUA")
+
+rankOrder <- plotRankOrder2(calcFoldChange(Plasma_60min_15msResults, 
+                              plasmaResults, DepletedList2, EnrichedList2),
+               labels = TRUE)
+
+
+
+ggarrange(pepSummary, protSummary, plotCV, rankOrder, volcano, 
+          labels = c("A", "", "B", "C", "D"),
+          ncol = 1, nrow = 5, heights = c(0.65, 0.65, 1.2, 1.3, 1))
+
+ggsave("results/AstralBenchmarking_Figure4.jpg", height = 11, width = 6.66, dpi = 700)
 
 
 ### Graphical abstract
@@ -152,8 +165,8 @@ ggsave("results/AstralBenchmarking_Figure4.jpg", height = 8, width = 6.66, dpi =
 graphicAbstract <- plotLOQMMCCSummaryGraphicalAbstract(quantMMCC1,
                                     OTmultiplier = 90,
                                     ASmultiplier = 24,
-                                    AxisLabel = "Peptides per hour")
+                                    AxisLabel = "Peptides quantified per hour")
 
-ggarrange(graphicAbstract, blank, nrow = 1)
+ggarrange(blank, graphicAbstract, nrow = 2)
 
 ggsave("results/AstralBenchmarking_TOCGraphic.jpg", height = 1.75, width = 3.25, dpi = 700)
