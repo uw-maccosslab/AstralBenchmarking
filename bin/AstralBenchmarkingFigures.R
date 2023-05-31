@@ -89,9 +89,9 @@ LOQhisto <- plotLOQMMCC(quantMMCC1)
 LOQsummary <- plotLOQMMCCSummary(quantMMCC1)
 
 pairwiseComp <- plotLOQMMCCHistogram(quantMMCC1, MMCC_AS_3p5msResults,
-                     "Astral, 24 minute gradient",
+                     "Astral, 24-minute gradient",
                      MMCC_OT_90minResults,
-                     "Orbitrap, 90 minute gradient")
+                     "Orbitrap, 90-minute gradient")
 
 quantRatioPlot <- quantRatioDensity(quantMMCC1, 100, 10)
 

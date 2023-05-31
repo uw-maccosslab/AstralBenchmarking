@@ -707,7 +707,7 @@ readQuantReports <- function(fileRoot1, ...) {
     mutate(Total.Background.Fragment = as.numeric(Total.Background.Fragment)) %>%
     mutate(Best.Retention.Time = as.numeric(Best.Retention.Time)) %>%
     mutate(ResultType = "All")%>%
-    mutate(Gradient = paste0(Gradient, " minutes"))
+    mutate(Gradient = paste0(Gradient, "-minutes"))
 
   quant_refined <- read.csv(paste0(fileRoot1, "_Refined_Quant.csv"))  %>%
     mutate(Normalized.Area = gsub("#N/A", 0, Normalized.Area)) %>%
@@ -721,7 +721,7 @@ readQuantReports <- function(fileRoot1, ...) {
     mutate(Total.Background.Fragment = as.numeric(Total.Background.Fragment)) %>%
     mutate(Best.Retention.Time = as.numeric(Best.Retention.Time)) %>%
     mutate(ResultType = "Refined")%>%
-    mutate(Gradient = paste0(Gradient, " minutes"))
+    mutate(Gradient = paste0(Gradient, "-minutes"))
 
   quant_full <- bind_rows(quant_unrefined, quant_refined)
 
@@ -740,7 +740,7 @@ readQuantReports <- function(fileRoot1, ...) {
       mutate(Total.Background.Fragment = as.numeric(Total.Background.Fragment)) %>%
       mutate(Best.Retention.Time = as.numeric(Best.Retention.Time)) %>%
       mutate(ResultType = "All")%>%
-      mutate(Gradient = paste0(Gradient, " minutes"))
+      mutate(Gradient = paste0(Gradient, "-minutes"))
 
     quant_refined <- read.csv(paste0(f, "_Refined_Quant.csv"))  %>%
       mutate(Normalized.Area = gsub("#N/A", 0, Normalized.Area)) %>%
@@ -754,7 +754,7 @@ readQuantReports <- function(fileRoot1, ...) {
       mutate(Total.Background.Fragment = as.numeric(Total.Background.Fragment)) %>%
       mutate(Best.Retention.Time = as.numeric(Best.Retention.Time)) %>%
       mutate(ResultType = "Refined")%>%
-      mutate(Gradient = paste0(Gradient, " minutes"))
+      mutate(Gradient = paste0(Gradient, "-minutes"))
 
     quant_full <- bind_rows(quant_full, quant_unrefined, quant_refined)
   }
